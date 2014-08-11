@@ -1,16 +1,18 @@
-from collections import Counter
+import matplotlib.pyplot as plt
 
+from collections import Counter
 import argparse
 import os
 import os.path
-import matplotlib.pyplot as plt
-import numpy as np
+import time
 
 _DEFAULT_FILETYPES = 'gif,jpeg,jpg,ppt,png,doc,xls,xlsx,svg,txt,csv,pdf,tex'
 
 def main():
+    starttime = time.time()
     args = get_arguments()
     frequencies = get_frequencies(args.personal_directory, args.ignore)
+    print('Analysis took %.2fs' % (time.time() - starttime))
     histogram(frequencies, args.types)
 
 
@@ -38,9 +40,11 @@ def get_frequencies(directory, ignore_dirs):
 
 def histogram(frequencies, filetypes):
     elements = [frequencies[t] for t in filetypes]
-    y_pos = np.arange(len(elements))
+    y_pos = range(len(elements))
     plt.barh(y_pos, elements, align='center')
     plt.yticks(y_pos, filetypes)
+    plt.title('Your filecounts')
+    plt.xlabel('# files')
     plt.show()
 
 if __name__ == '__main__':
